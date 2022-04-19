@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import BlogList from "./BlogList";
-
+import useFetch from "./useFetch";
 const Home = () => {
   const [likes, setlikes] = useState(4);
 
-  const [blogs, setBlogs] = useState(null);
+  ///upper are the states
 
   const handleClick = (e) => {
     console.log("Hey you clicked me", e);
@@ -24,23 +24,23 @@ const Home = () => {
   };
 
   //fetching happens hereeeee
-
-  useEffect(() => {
-    fetch("https://json-server.realanupreet.repl.co/posts")
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setBlogs(data);
-        console.log(data);
-      });
-  }, []);
-
+  const { data: blogs, isPending, error } = useFetch(
+    "https://json-server.realanupreet.repl.co/posts"
+  );
   //return function after this
 
   return (
     <div className="home">
       <h1 style={{ color: "grey" }}>This is the {likes} home page</h1>
+
+      {error && <div>{error}</div>}
+
+      {isPending && (
+        <img
+          src="https://c.tenor.com/KAF_PYnpnQwAAAAC/glee-santana-lopez.gif"
+          alt="oh-boy"
+        />
+      )}
 
       {blogs && (
         <BlogList blogs={blogs} title="All Blogs" handleDelete={handleDelete} />
@@ -64,10 +64,11 @@ const Home = () => {
         Buttons Over here 
   
       */}
+      <br />
       <button onClick={handleClick}>Click me</button>
       <button
         onClick={(e) => {
-          handleClickAgain("horn", e);
+          handleClickAgain("hornb", e);
         }}
       >
         Click me again
